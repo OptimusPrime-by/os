@@ -1,0 +1,7 @@
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+	printf("Page size equals %d bytes",getpagesize());
+	return 0;
+}

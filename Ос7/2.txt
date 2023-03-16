@@ -1,0 +1,53 @@
+#include <iostream>
+#include<sys/mman.h>
+#include <unistd.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+
+using namespace std;
+
+int main(){
+int page;
+
+page = getpagesize();
+cout << page;
+page = sysconf(_SC_PAGESIZE);
+cout << endl << page << endl;
+char* fname= new char[256];
+fname = "/home/maksim/OperatingSystems/txt.txt";
+//РѕС‚РєСЂС‹С‚СЊ РЅР° С‡С‚РµРЅРёРµ
+int fd = open(fname, O_RDONLY, 0);
+if(fd<0){
+perror("open");
+return 1;
+}
+struct stat st;
+//СЂР°Р·РјРµСЂ
+if(fstat(fd,&st)<0){
+perror("fstat");
+return 1;
+}
+size_t fsize = (size_t)st.st_size;
+
+unsigned char* dataPtr = (unsigned char*)mmap(nullptr, fsize, PROT_READ, MAP_SHARED, fd,0);
+if(dataPtr == MAP_FAILED){
+    perror("mmap");
+    return 1;
+}
+cout << endl << "РСЃС…РѕРґРЅС‹Р№ С‚РµРєСЃС‚:" << endl;
+for(int i = 0; i<fsize; i++){
+    cout << dataPtr[i];
+}
+//С€РёС„Р°СЂ
+cout<<"Р—Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ С‚РµРєСЃС‚:"<<endl;
+int k = 3;
+unsigned char otvet[fsize]={};
+ for(int i =0;i<fsize;i++){
+                 if ( dataPtr[i]>= 'a' && dataPtr[i] <= 'z')
+            otvet[i] = ((dataPtr[i] - 'a' + k) % 26) + 'a';
+        else if (dataPtr[i] >= 'A' && dataPtr[i] <= 'Z')
+            otvet[i] = ((dataPtr[i] - 'A' + k) % 26) + 'A';
+                            cout<<otvet[i];
+
+                }
+}

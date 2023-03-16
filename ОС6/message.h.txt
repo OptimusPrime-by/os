@@ -1,0 +1,28 @@
+#define SHM_NAME "my_shm"
+#define SEM_NAME "my_sem_lr6_os"
+#define PERM 0777
+#define SHM_SIZE sizeof(message)
+#define EXIT_COMMAND ":q"
+
+enum message_status
+{
+    MUST_READ = 1,
+    ALREADY_READ
+};
+
+enum message_recipient
+{
+    SERVER = 1,
+    CLIENT
+};
+
+#define MESSAGE_CONTENT_LENGTH 56
+//          ^  ^  ^
+//          |  |  |
+// СЂР°Р·РјРµСЂ РїСѓСЃС‚СЊ СѓРєР»Р°РґС‹РІР°РµС‚СЃСЏ РІ 64
+struct message
+{
+    message_status status;
+    message_recipient recipient;
+    char content[MESSAGE_CONTENT_LENGTH];
+};
